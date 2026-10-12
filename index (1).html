@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#090611">
+<title>Độ Nhạy Bám Đầu FF</title>
+<style>
+:root{--bg:#090611;--panel:#130d20;--panel2:#1b1230;--purple:#a855f7;--pink:#ec4899;--text:#f7f2ff;--muted:#b8abc9;--line:#39234e;--good:#b8ffdf}
+*{box-sizing:border-box}
+body{margin:0;-webkit-text-size-adjust:100%;touch-action:pan-y;background:radial-gradient(ellipse at 80% 0%,#321052 0%,transparent 38%),radial-gradient(ellipse at 0% 45%,#190d35 0%,transparent 40%),var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif;min-height:100vh}
+header{border-bottom:1px solid #4c2670;background:#090611d9;backdrop-filter:blur(12px);position:sticky;top:0;z-index:5}
+.nav{max-width:1180px;margin:auto;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:14px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:900;letter-spacing:.5px}
+.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--purple),var(--pink));display:grid;place-items:center;box-shadow:0 0 24px #a855f755;font-size:21px}
+.brand span{display:block;font-size:11px;color:var(--muted);font-weight:600;letter-spacing:1.8px;margin-top:3px}
+.pill{border:1px solid #673c86;background:#1a1028;color:#e8caff;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:700}
+main{max-width:1180px;margin:0 auto;padding:36px 22px 60px}
+.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:28px;align-items:center;margin:14px 0 30px}
+.eyebrow{color:#d8a7ff;text-transform:uppercase;letter-spacing:3px;font-size:11px;font-weight:900}
+h1{font-size:clamp(34px,5vw,58px);line-height:1.03;letter-spacing:-2px;margin:13px 0 16px}
+h1 em{font-style:normal;background:linear-gradient(90deg,#c084fc,#f0abfc,#fb7185);color:transparent;background-clip:text}
+.hero p{color:var(--muted);line-height:1.7;max-width:640px;margin:0}
+.hero-art{min-height:190px;border:1px solid #5c2b80;border-radius:24px;background:linear-gradient(135deg,#25113c,#110b1d 70%);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.hero-art:before,.hero-art:after{content:"";position:absolute;border:1px solid #c084fc55;border-radius:50%;width:210px;height:210px}
+.hero-art:after{width:145px;height:145px}
+.crosshair{width:78px;height:78px;border:2px solid #f0abfc;border-radius:50%;position:relative;box-shadow:0 0 28px #c084fc88;z-index:1}
+.crosshair:before{content:"";position:absolute;width:2px;height:104px;background:#f0abfc;left:36px;top:-15px}
+.crosshair:after{content:"";position:absolute;height:2px;width:104px;background:#f0abfc;top:36px;left:-15px}
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.panel{background:linear-gradient(180deg,#171023f5,#100b19f5);border:1px solid var(--line);border-radius:20px;padding:24px;box-shadow:0 18px 45px #0002}
+.panel h2{font-size:19px;margin:0 0 6px}
+.sub{color:var(--muted);font-size:13px;line-height:1.6;margin:0 0 22px}
+.field{margin-bottom:19px}
+label{display:flex;justify-content:space-between;gap:10px;font-size:13px;font-weight:750;margin-bottom:9px}
+label small{color:#cba7ef;font-weight:600}
+input,select{width:100%;min-height:46px;padding:12px 13px;border:1px solid #4a315f;border-radius:11px;background:#0e0917;color:var(--text);font:inherit;outline:none}
+input:focus,select:focus{border-color:#c084fc;box-shadow:0 0 0 3px #a855f722}
+select option{background:#130d20}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.range-line{display:flex;align-items:center;gap:12px}
+input[type=range]{padding:0;accent-color:#c084fc;cursor:pointer}
+.number{min-width:45px;text-align:center;border:1px solid #583778;border-radius:9px;padding:7px;color:#e9caff;background:#251435;font-weight:850}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.choice{position:relative}
+.choice input{position:absolute;opacity:0;pointer-events:none}
+.choice span{display:block;border:1px solid #49305c;border-radius:11px;padding:12px;font-size:12px;line-height:1.4;color:#d6c8e4;cursor:pointer;min-height:50px}
+.choice input:checked+span{border-color:#c084fc;background:#35184b;color:#fff;box-shadow:inset 0 0 0 1px #c084fc55}
+.btn{min-height:46px;border:0;border-radius:12px;padding:13px 16px;font-weight:900;cursor:pointer;font-size:14px;transition:transform .15s,filter .15s}
+.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.primary{width:100%;background:linear-gradient(100deg,#9333ea,#c026d3,#db2777);color:white;box-shadow:0 8px 24px #a855f733}
+.secondary{background:#251435;color:#ead7ff;border:1px solid #573775}
+.result-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:18px}
+.status{font-size:11px;letter-spacing:1px;font-weight:900;color:var(--good);border:1px solid #367b66;background:#10261f;border-radius:999px;padding:7px 9px}
+.results{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.stat{padding:15px;border-radius:13px;border:1px solid #39234e;background:#100a19}
+.stat .name{font-size:12px;color:var(--muted);margin-bottom:10px}
+.stat .value{font-size:30px;font-weight:900;letter-spacing:-1px}
+.stat .bar{height:5px;border-radius:9px;background:#30213e;margin-top:12px;overflow:hidden}
+.stat .bar i{display:block;height:100%;background:linear-gradient(90deg,#a855f7,#ec4899);border-radius:9px}
+.tip{margin-top:16px;border:1px solid #49305c;border-radius:12px;padding:14px;color:#d8c9e8;font-size:13px;line-height:1.65;background:#150d20}
+.actions{display:flex;gap:10px;margin-top:14px}.actions .btn{flex:1}
+.disclaimer{margin-top:22px;color:#9f91b0;font-size:11px;line-height:1.7}
+footer{border-top:1px solid #2b1a3a;padding:22px;text-align:center;color:#9585a6;font-size:12px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#251435;border:1px solid #9d5bd1;color:white;padding:12px 16px;border-radius:12px;display:none;z-index:10;box-shadow:0 8px 35px #0008}
+@media(max-width:800px){.hero{grid-template-columns:1fr}.hero-art{min-height:150px}.layout{grid-template-columns:1fr}.nav{padding:14px 16px}main{padding:26px 15px 45px}.panel{padding:19px}}
+@media(max-width:420px){.nav{align-items:flex-start}.brand{font-size:13px}.logo{width:36px;height:36px;flex-shrink:0}.hero{gap:18px}.hero-art{min-height:125px}.panel{padding:16px}.two{grid-template-columns:1fr}.checks{grid-template-columns:1fr}.pill{display:none}.stat .value{font-size:26px}h1{letter-spacing:-1px}}
+</style>
+</head>
+<body>
+<header><div class="nav">
+  <div class="brand"><div class="logo">✦</div><div>ĐỘ NHẠY BÁM ĐẦU<span>FREE FIRE • SENSITIVITY LAB</span></div></div>
+  <div class="pill">● CÔNG CỤ THAM KHẢO</div>
+</div></header>
+<main>
+  <section class="hero">
+    <div><div class="eyebrow">Tối ưu theo cảm giác điều khiển</div>
+      <h1>KÉO TÂM <em>CHUẨN HƠN.</em></h1>
+      <p>Tạo cấu hình độ nhạy tham khảo theo thiết bị và thói quen kéo tâm của bạn. Thử từng bước nhỏ trong khu tập luyện rồi điều chỉnh theo cảm giác thực tế.</p>
+    </div>
+    <div class="hero-art" aria-label="Đồ họa tâm ngắm neon"><div class="crosshair"></div></div>
+  </section>
+
+  <section class="layout">
+    <div class="panel">
+      <h2>⚙ Thiết lập thiết bị</h2>
+      <p class="sub">Nhập thông số hiện tại để tạo gợi ý phù hợp hơn.</p>
+      <div class="field">
+        <label for="device">Dòng điện thoại</label>
+        <input id="device" list="devices" placeholder="Ví dụ: Samsung Galaxy A20s" value="Samsung Galaxy A20s">
+        <datalist id="devices"><option>Samsung Galaxy A11</option><option>Samsung Galaxy A20s</option><option>Samsung Galaxy A12</option><option>Samsung Galaxy A15</option><option>Redmi 9A</option><option>Redmi Note 10</option><option>iPhone 11</option><option>iPhone 13</option><option>Khác</option></datalist>
+      </div>
+      <div class="two">
+        <div class="field"><label for="dpi">DPI <small>100–800</small></label><input id="dpi" type="number" min="100" max="800" value="440"></div>
+        <div class="field"><label for="scale">Thang độ nhạy</label><select id="scale"><option value="200" selected>0–200</option><option value="100">0–100</option></select></div>
+      </div>
+      <div class="field"><label for="current">Độ nhạy tổng quát hiện tại <small id="currentOut">150</small></label><div class="range-line"><input id="current" type="range" min="0" max="200" value="150"><div class="number" id="currentNum">150</div></div></div>
+      <div class="field"><label for="red">Red Dot hiện tại <small id="redOut">145</small></label><div class="range-line"><input id="red" type="range" min="0" max="200" value="145"><div class="number" id="redNum">145</div></div></div>
+      <div class="field"><label>Vấn đề bạn gặp</label>
+        <div class="checks">
+          <label class="choice"><input type="radio" name="issue" value="overshoot" checked><span>↗ Kéo quá đầu / lố tâm</span></label>
+          <label class="choice"><input type="radio" name="issue" value="slow"><span>⇧ Khó kéo lên đầu</span></label>
+          <label class="choice"><input type="radio" name="issue" value="shake"><span>〰 Tâm bị rung</span></label>
+          <label class="choice"><input type="radio" name="issue" value="heavy"><span>◉ Tâm nặng / chạm chậm</span></label>
+        </div>
+      </div>
+      <div class="field"><label for="style">Kiểu kéo tâm</label><select id="style"><option value="short">Kéo ngắn, nhanh</option><option value="long">Kéo dài, vuốt mạnh</option><option value="steady">Kéo vừa, có kiểm soát</option></select></div>
+      <button class="btn primary" id="generate">✦ TẠO CẤU HÌNH GỢI Ý</button>
+    </div>
+
+    <div class="panel" id="resultPanel">
+      <div class="result-top"><div><h2>✧ Cấu hình đề xuất</h2><p class="sub" style="margin:6px 0 0">Dùng làm điểm bắt đầu, không phải công thức bảo đảm headshot.</p></div><span class="status">SẴN SÀNG</span></div>
+      <div class="results" id="results">
+        <div class="stat"><div class="name">Tổng quát</div><div class="value" id="vGeneral">158</div><div class="bar"><i id="bGeneral" style="width:79%"></i></div></div>
+        <div class="stat"><div class="name">Red Dot</div><div class="value" id="vRed">150</div><div class="bar"><i id="bRed" style="width:75%"></i></div></div>
+        <div class="stat"><div class="name">Ống ngắm 2x</div><div class="value" id="v2x">142</div><div class="bar"><i id="b2x" style="width:71%"></i></div></div>
+        <div class="stat"><div class="name">Ống ngắm 4x</div><div class="value" id="v4x">128</div><div class="bar"><i id="b4x" style="width:64%"></i></div></div>
+        <div class="stat"><div class="name">Ống ngắm AWM</div><div class="value" id="vAwm">82</div><div class="bar"><i id="bAwm" style="width:41%"></i></div></div>
+        <div class="stat"><div class="name">Nhìn xung quanh</div><div class="value" id="vLook">135</div><div class="bar"><i id="bLook" style="width:67.5%"></i></div></div>
+      </div>
+      <div class="tip" id="tip"><strong>Gợi ý thử:</strong> Vì bạn chọn kéo quá đầu, hãy thử giảm nhẹ Tổng quát và Red Dot. Vào khu tập luyện, bắn thử vài loạt rồi thay đổi mỗi lần 3–5 điểm.</div>
+      <div class="actions"><button class="btn secondary" id="copy">⧉ Sao chép cấu hình</button><button class="btn secondary" id="reset">↺ Đặt lại</button></div>
+      <div class="disclaimer">Thông số được tính bằng quy tắc gợi ý đơn giản từ dữ liệu bạn nhập, không phải dữ liệu đo trực tiếp từ game. DPI chỉ là thông tin tham khảo; thay đổi DPI có thể ảnh hưởng toàn bộ giao diện điện thoại. Hãy giữ các thay đổi ở mức bạn kiểm soát được.</div>
+    </div>
+  </section>
+</main>
+<footer>ĐỘ NHẠY BÁM ĐẦU FF • Responsive cho điện thoại, tablet và máy tính • Fan-made tool • Không liên kết hoặc được Garena chứng nhận.</footer>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const $ = id => document.getElementById(id);
+const clamp = (n,min,max) => Math.max(min,Math.min(max,n));
+function updateLabels(){
+  $('currentNum').textContent=$('current').value;
+  $('currentOut').textContent=$('current').value;
+  $('redNum').textContent=$('red').value;
+  $('redOut').textContent=$('red').value;
+}
+$('current').addEventListener('input',updateLabels);
+$('red').addEventListener('input',updateLabels);
+function selectedIssue(){return document.querySelector('input[name="issue"]:checked').value}
+function generate(){
+  const scale=Number($('scale').value);
+  const factor=scale/200;
+  const dpi=clamp(Number($('dpi').value)||440,100,800);
+  const base=clamp(Number($('current').value)||0,0,200);
+  const redBase=clamp(Number($('red').value)||0,0,200);
+  const issue=selectedIssue();
+  const style=$('style').value;
+  // DPI influences only a small heuristic adjustment; no game telemetry is read.
+  let dpiAdjust=clamp((dpi-440)/80,-3,3);
+  let general=base+dpiAdjust, red=redBase+dpiAdjust;
+  if(issue==='overshoot'){general-=8;red-=7}
+  if(issue==='slow'){general+=8;red+=7}
+  if(issue==='shake'){general-=5;red-=5}
+  if(issue==='heavy'){general+=5;red+=4}
+  if(style==='short'){general+=3;red+=2}
+  if(style==='long'){general-=2;red-=2}
+  let values={
+    General:clamp(Math.round(general),0,200),
+    Red:clamp(Math.round(red),0,200),
+    '2x':clamp(Math.round(red-8),0,200),
+    '4x':clamp(Math.round(red-20),0,200),
+    Awm:clamp(Math.round(red-58),0,200),
+    Look:clamp(Math.round(general-15),0,200)
+  };
+  const keys={General:'General',Red:'Red','2x':'2x','4x':'4x',Awm:'Awm',Look:'Look'};
+  Object.entries(values).forEach(([k,v])=>{
+    const shown=Math.round(v*factor);
+    $('v'+keys[k]).textContent=shown;
+    $('b'+keys[k]).style.width=(shown/scale*100)+'%';
+  });
+  const tips={
+    overshoot:'Bạn chọn kéo quá đầu: thử giảm Tổng quát/Red Dot như kết quả trên. Nếu vẫn lố, giảm thêm 3–5 điểm rồi kiểm tra lại.',
+    slow:'Bạn chọn khó kéo lên đầu: thử tăng nhẹ Tổng quát/Red Dot. Nếu tâm bắt đầu lố, quay lại mức trước đó.',
+    shake:'Bạn chọn tâm rung: thử giảm nhẹ độ nhạy, giữ FPS ổn định và đóng ứng dụng nền. Độ nhạy không thể tự sửa lỗi hiệu năng.',
+    heavy:'Bạn chọn tâm nặng: thử tăng nhẹ Tổng quát/Red Dot. Kiểm tra thêm tốc độ khung hình và độ ổn định cảm ứng.'
+  };
+  $('tip').innerHTML='<strong>Gợi ý thử:</strong> '+tips[issue]+' Hãy thay đổi từng bước nhỏ, không cần chỉnh tất cả cùng lúc.';
+  $('resultPanel').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function configText(){
+  return 'ĐỘ NHẠY BÁM ĐẦU FF\\nThiết bị: '+($('device').value.trim()||'Chưa nhập')+
+  '\\nDPI nhập: '+$('dpi').value+'\\nThang: 0–'+$('scale').value+
+  '\\nTổng quát: '+$('vGeneral').textContent+'\\nRed Dot: '+$('vRed').textContent+
+  '\\nỐng ngắm 2x: '+$('v2x').textContent+'\\nỐng ngắm 4x: '+$('v4x').textContent+
+  '\\nAWM: '+$('vAwm').textContent+'\\nNhìn xung quanh: '+$('vLook').textContent+
+  '\\nLưu ý: cấu hình tham khảo, không bảo đảm headshot.';
+}
+function toast(msg){const t=$('toast');t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2200)}
+$('generate').addEventListener('click',()=>{generate();toast('Đã tạo cấu hình tham khảo')});
+$('copy').addEventListener('click',async()=>{
+  const txt=configText();
+  try{await navigator.clipboard.writeText(txt);toast('Đã sao chép cấu hình')}
+  catch(e){const ta=document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast('Đã sao chép cấu hình')}
+});
+$('reset').addEventListener('click',()=>{
+  $('device').value='Samsung Galaxy A20s';$('dpi').value=440;$('scale').value='200';
+  $('current').value=150;$('red').value=145;$('style').value='short';
+  document.querySelector('input[name="issue"][value="overshoot"]').checked=true;
+  updateLabels();generate();toast('Đã đặt lại thông số');
+});
+$('scale').addEventListener('change',generate);
+updateLabels();generate();
+</script>
+</body>
+</html>
